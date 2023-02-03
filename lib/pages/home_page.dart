@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/pages/custom_drawer.dart';
-import 'package:myapp/pages/one_page.dart';
-import 'package:myapp/pages/three_page.dart';
-import 'package:myapp/pages/two_page.dart';
+import 'package:myapp/pages/card_page.dart';
+import 'package:myapp/pages/list_view_h_page.dart';
+import 'package:myapp/pages/list_view_page.dart';
+import 'package:myapp/pages/images_page.dart';
+import 'package:myapp/pages/tarefas_page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -33,10 +35,11 @@ class _MainPageState extends State<MainPage> {
                     posicaoPagina = value;
                   });
                 }),
-                children: const [OnePage(), TwoPage(), ThreePage()],
+                children: const [CardPage(), ImagesPage(), ListViewPage(), ListViewHPage(), TarefasPage()],
               ),
             ),
             BottomNavigationBar(
+                type: BottomNavigationBarType.fixed,
                 onTap: (value) {
                   controller.jumpToPage(value);
                 },
@@ -45,8 +48,10 @@ class _MainPageState extends State<MainPage> {
                   BottomNavigationBarItem(
                       label: "home", icon: Icon(Icons.home)),
                   BottomNavigationBarItem(
-                      label: "pag2", icon: Icon(Icons.person)),
-                  BottomNavigationBarItem(label: "pag3", icon: Icon(Icons.add))
+                      label: "pag2", icon: Icon(Icons.add)),
+                  BottomNavigationBarItem(label: "pag3", icon: Icon(Icons.person)),
+                  BottomNavigationBarItem(label: "pag4", icon: Icon(Icons.image)),
+                  BottomNavigationBarItem(label: "pag5", icon: Icon(Icons.pending_actions)),
                 ])
           ],
         ),
