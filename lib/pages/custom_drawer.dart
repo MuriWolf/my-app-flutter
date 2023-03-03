@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/pages/configuracoesPage.dart';
 import 'package:myapp/pages/login_page.dart';
+import 'package:myapp/pages/random_number_page.dart';
 import 'dados_cadastrais_page.dart';
 
 class CustomDrawer extends StatelessWidget {
@@ -108,7 +110,13 @@ class CustomDrawer extends StatelessWidget {
                       ))),
               const Divider(),
               InkWell(
-                  onTap: () => {},
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (bc) => const ConfiguracoesPage()));
+                  },
                   child: Container(
                       padding: const EdgeInsets.all(4),
                       width: double.infinity,
@@ -118,6 +126,27 @@ class CustomDrawer extends StatelessWidget {
                           Padding(
                             padding: EdgeInsets.only(left: 6),
                             child: Text("Configurações"),
+                          ),
+                        ],
+                      ))),
+              const Divider(),
+              InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (bc) => const RandomNumberPage()));
+                  },
+                  child: Container(
+                      padding: const EdgeInsets.all(4),
+                      width: double.infinity,
+                      child: Row(
+                        children: const [
+                          Icon(Icons.numbers),
+                          Padding(
+                            padding: EdgeInsets.only(left: 6),
+                            child: Text("Random number"),
                           ),
                         ],
                       ))),
