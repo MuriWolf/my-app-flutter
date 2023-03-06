@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ConfiguracoesPage extends StatefulWidget {
   const ConfiguracoesPage({super.key});
@@ -8,10 +9,32 @@ class ConfiguracoesPage extends StatefulWidget {
 }
 
 class _ConfiguracoesPageState extends State<ConfiguracoesPage> {
+  late SharedPreferences storage;
+  @override
+  void initState() {
+    super.initState();
+    carregarDados();
+  }
+
   var nomeController = TextEditingController();
   var alturaController = TextEditingController();
   bool notificacoes = false;
   bool temaEscuro = false;
+
+  final String NOME_KEY = "NOME_KEY";
+  final String ALTURA_KEY = "ALTURA_KEY";
+  final String RECEBER_NOTIFICACOES_KEY = "RECEBER_NOTIFICACOES_KEY";
+  final String TEMA_ESCURO_KEY = "TEMA_ESCURO_KEY";
+
+  void carregarDados() async {
+    storage = await SharedPreferences.getInstance();
+    setState(() {
+      nomeController.text = storage.getString(NOME_KEY) ?? "";
+      alturaController.text = (storage.getDouble(ALTURA_KEY) ?? 0).toString();
+      notificacoes = storage.getBool(RECEBER_NOTIFICACOES_KEY) ?? false;
+      temaEscuro = storage.getBool(TEMA_ESCURO_KEY) ?? false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +76,24 @@ class _ConfiguracoesPageState extends State<ConfiguracoesPage> {
                   temaEscuro = value;
                 });
               }),
-          TextButton(onPressed: () {}, child: const Text("Confirmar"))
+          TextButton(
+              onPressed: () async {
+                FocusManager.instance.primaryFocus?.unfocus();
+                try {
+                  await storage.setDouble(
+                      ALTURA_KEY, double.parse(alturaController.text));
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    duration: Duration(milliseconds: 850),
+                      content: Text("Digite uma altura válida!")));
+                  return;
+                }
+                await storage.setString(NOME_KEY, nomeController.text);
+                await storage.setBool(RECEBER_NOTIFICACOES_KEY, notificacoes);
+                await storage.setBool(TEMA_ESCURO_KEY, temaEscuro);
+                Navigator.pop(context);
+              },
+              child: const Text("Confirmar"))
         ],
       ),
     ));
