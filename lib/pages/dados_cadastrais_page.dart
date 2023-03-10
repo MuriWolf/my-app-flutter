@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:myapp/repositories/linguagens_repository.dart';
 import 'package:myapp/repositories/niveis_repository.dart';
 import 'package:myapp/shared/widgets/textLabel.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DadosCadastraisPage extends StatefulWidget {
   const DadosCadastraisPage({super.key});
@@ -24,6 +25,19 @@ class _DadosCadastraisPageState extends State<DadosCadastraisPage> {
   int tempoExperiencia = 0;
   bool salvando = false;
 
+  String KEY_DADOS_CADASTRAIS_NOME = "KEY_DADOS_CADASTRAIS_NOME";
+  String KEY_DADOS_CADASTRAIS_NASCIMENTO = "KEY_DADOS_CADASTRAIS_NASCIMENTO";
+  String KEY_DADOS_CADASTRAIS_NIVEL_EXPERIENCIA =
+      "KEY_DADOS_CADASTRAIS_NIVEL_EXPERIENCIA";
+  String KEY_DADOS_CADASTRAIS_LINGUAGENS_FAVORITAS =
+      "KEY_DADOS_CADASTRAIS_LINGUAGENS_FAVORITAS";
+  String KEY_DADOS_CADASTRAIS_TEMPO_EXPERIENCIA =
+      "KEY_DADOS_CADASTRAIS_TEMPO_EXPERIENCIA";
+  String KEY_DADOS_CADASTRAIS_PRETENCAO_SALARIAL =
+      "KEY_DADOS_CADASTRAIS_PRETENCAO_SALARIAL";
+
+  late SharedPreferences storage;
+
   List<DropdownMenuItem<int>> returnDropdownItems(int max) {
     var items = <DropdownMenuItem<int>>[];
     for (var i = 0; i <= max; i++) {
@@ -37,6 +51,13 @@ class _DadosCadastraisPageState extends State<DadosCadastraisPage> {
     niveis = nivelRepository.returnNiveis();
     linguagens = linguagensRepository.returnLinguagens();
     super.initState();
+    carregarDados();
+  }
+
+  carregarDados() async {
+    storage = await SharedPreferences.getInstance();
+    nomeController.text = storage.getString(KEY_DADOS_CADASTRAIS_NOME) ?? "";
+    setState(() {});
   }
 
   @override
@@ -174,6 +195,22 @@ class _DadosCadastraisPageState extends State<DadosCadastraisPage> {
                                         "Dados cadastrados com sucesso!")));
                             Navigator.pop(context);
                           });
+                          // SET DE DADOS NO "BANCO DE DADOS"
+                          storage.setString(
+                              KEY_DADOS_CADASTRAIS_NOME, nomeController.text);
+                          storage.setString(KEY_DADOS_CADASTRAIS_NASCIMENTO,
+                              dataNascimento.toString());
+                          storage.setString(
+                              KEY_DADOS_CADASTRAIS_NIVEL_EXPERIENCIA,
+                              nivelSelecionado);
+                          storage.setStringList(
+                              KEY_DADOS_CADASTRAIS_LINGUAGENS_FAVORITAS,
+                              linguagensSelecionadas);
+                          storage.setInt(KEY_DADOS_CADASTRAIS_TEMPO_EXPERIENCIA,
+                              tempoExperiencia);
+                          storage.setDouble(
+                              KEY_DADOS_CADASTRAIS_PRETENCAO_SALARIAL,
+                              pretencaoSalarial);
                         },
                         child: const Text("Enviar dados"))
                   ],
